@@ -1,5 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
-;;;; SPLIT-SEQUENCE
+;;;
+;;; SPLIT-SEQUENCE
 ;;;
 ;;; This code was based on Arthur Lemmens' in
 ;;; <URL:http://groups.google.com/groups?as_umsgid=39F36F1A.B8F19D20%40simplex.nl>;
@@ -53,7 +54,9 @@
 
 (defpackage :split-sequence
   (:use :common-lisp)
-  (:export #:split-sequence #:split-sequence-if #:split-sequence-if-not))
+  (:export #:split-sequence
+           #:split-sequence-if
+           #:split-sequence-if-not))
 
 (in-package :split-sequence)
 
