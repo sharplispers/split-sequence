@@ -1,7 +1,7 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 
 (defpackage :split-sequence-tests
-  (:use :common-lisp :fiveam))
+  (:use :common-lisp :split-sequence :fiveam))
 
 (in-package :split-sequence-tests)
 
