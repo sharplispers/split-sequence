@@ -1,7 +1,8 @@
 ;;; -*- Lisp -*-
 
 (defsystem :split-sequence
-    :version "20011114.1"
+  :version "1.0"
+  :maintainer "Stelian Ionescu <sionescu@cddr.org>"
   :components ((:file "split-sequence"))
   :in-order-to ((asdf:test-op (asdf:load-op :split-sequence-tests)))
   :perform (asdf:test-op :after (op c)
