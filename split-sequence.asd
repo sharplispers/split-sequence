@@ -4,4 +4,11 @@
 
 (defsystem :split-sequence
     :version "20011114.1"
-    :components ((:file "split-sequence")))
+  :components ((:file "split-sequence"))
+  :in-order-to ((asdf:test-op (asdf:load-op :split-sequence-tests)))
+  :perform (asdf:test-op :after (op c)
+             (funcall (intern (symbol-name '#:run!) '#:5am) :split-sequence)))
+
+(defsystem :split-sequence-tests
+  :depends-on (:split-sequence :fiveam)
+  :components ((:file "tests")))
