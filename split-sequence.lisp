@@ -1,3 +1,4 @@
+;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; SPLIT-SEQUENCE
 ;;;
 ;;; This code was based on Arthur Lemmens' in
@@ -10,7 +11,7 @@
 ;;; CL:REMOVE, CL:SUBSTITUTE et al. (:from-end being non-NIL only
 ;;; affects the answer if :count is less than the number of
 ;;; subsequences, by analogy with the above-referenced functions).
-;;;   
+;;;
 ;;; * changing the :maximum keyword argument to :count, by analogy
 ;;; with CL:REMOVE, CL:SUBSTITUTE, and so on.
 ;;;
@@ -45,7 +46,7 @@
 ;;; -> ("" "" "r" "c" "d" "" "r" ""), 11
 ;;;
 ;;; * (split-sequence-if-not (lambda (x) (member x '(#\a #\b))) "abracadabra")
-;;; -> ("ab" "a" "a" "ab" "a"), 11 
+;;; -> ("ab" "a" "a" "ab" "a"), 11
 ;;;
 ;;; * (split-sequence #\; ";oo;bar;ba;" :start 1 :end 9)
 ;;; -> ("oo" "bar" "b"), 9
