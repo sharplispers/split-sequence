@@ -1,6 +1,4 @@
-;;; -*- Lisp -*- mode
-(defpackage #:split-sequence-system (:use #:cl #:asdf))
-(in-package :split-sequence-system)
+;;; -*- Lisp -*-
 
 (defsystem :split-sequence
     :version "20011114.1"
