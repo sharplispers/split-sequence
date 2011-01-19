@@ -50,13 +50,11 @@
 ;;; * (split-sequence #\; ";oo;bar;ba;" :start 1 :end 9)
 ;;; -> ("oo" "bar" "b"), 9
 
-(defpackage "SPLIT-SEQUENCE"
-  (:use "CL")
-  (:nicknames "PARTITION")
-  (:export "SPLIT-SEQUENCE" "SPLIT-SEQUENCE-IF" "SPLIT-SEQUENCE-IF-NOT"
-	   "PARTITION" "PARTITION-IF" "PARTITION-IF-NOT"))
+(defpackage :split-sequence
+  (:use :common-lisp)
+  (:export #:split-sequence #:split-sequence-if #:split-sequence-if-not))
 
-(in-package "SPLIT-SEQUENCE")
+(in-package :split-sequence)
 
 (defun split-sequence (delimiter seq &key (count nil) (remove-empty-subseqs nil) (from-end nil) (start 0) (end nil) (test nil test-supplied) (test-not nil test-not-supplied) (key nil key-supplied))
   "Return a list of subsequences in seq delimited by delimiter.
@@ -213,31 +211,5 @@ stopped."
             and sum 1 into nr-elts
             until (>= right end)
             finally (return (values subseqs right))))))
-
-;;; clean deprecation
-
-(defun partition (&rest args)
-  (apply #'split-sequence args))
-
-(defun partition-if (&rest args)
-  (apply #'split-sequence-if args))
-
-(defun partition-if-not (&rest args)
-  (apply #'split-sequence-if-not args))
-
-(define-compiler-macro partition (&whole form &rest args)
-  (declare (ignore args))
-  (warn "PARTITION is deprecated; use SPLIT-SEQUENCE instead.")
-  form)
-
-(define-compiler-macro partition-if (&whole form &rest args)
-  (declare (ignore args))
-  (warn "PARTITION-IF is deprecated; use SPLIT-SEQUENCE-IF instead.")
-  form)
-
-(define-compiler-macro partition-if-not (&whole form &rest args)
-  (declare (ignore args))
-  (warn "PARTITION-IF-NOT is deprecated; use SPLIT-SEQUENCE-IF-NOT instead")
-  form)
 
 (pushnew :split-sequence *features*)
