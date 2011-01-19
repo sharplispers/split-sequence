@@ -38,7 +38,7 @@
 (in-package :split-sequence)
 
 (macrolet ((check-bounds (sequence start end)
-             (with-gensyms (length)
+             (let ((length (gensym (string '#:length))))
                `(let ((,length (length ,sequence)))
                   (check-type ,start unsigned-byte "a non-negative integer")
                   (when ,end (check-type ,end unsigned-byte "a non-negative integer or NIL"))
