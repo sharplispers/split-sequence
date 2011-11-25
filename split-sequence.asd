@@ -2,6 +2,8 @@
 
 (defsystem :split-sequence
   :version "1.0"
+  :description "Splits a sequence into a list of subsequences
+  delimited by objects satisfying a test."
   :maintainer "Sharp Lispers <sharplispers@googlegroups.com>"
   :components ((:file "split-sequence"))
   :in-order-to ((asdf:test-op (asdf:load-op :split-sequence-tests)))
