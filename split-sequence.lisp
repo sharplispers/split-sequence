@@ -37,6 +37,16 @@
 
 (in-package :split-sequence)
 
+(deftype array-index (&optional (length array-dimension-limit))
+  `(integer 0 (,length)))
+
+(declaim (ftype (function (&rest t) (values list integer))
+                split-sequence)
+         (ftype (function (&rest t) (values list integer))
+                split-sequence-if)
+         (ftype (function (&rest t) (values list integer))
+                split-sequence-if-not))
+
 ;; declaim it INLINE, and at the end of the file as NOTINLINE, so it can be inlined with local DECLARE's.
 (declaim (inline split-sequence split-sequence-if split-sequence-if-not split-from-start split-from-end))
 
@@ -96,6 +106,10 @@ this function; :from-end values of NIL and T are equivalent unless
 :count is supplied. The second return value is an index suitable as an
 argument to CL:SUBSEQ into the sequence indicating where processing
 stopped."
+    (declare (optimize speed)
+             (type array-index start)
+             (type (or null array-index) end count)
+             (type sequence sequence))
     (check-bounds sequence start end)
     (cond
       ((and (not from-end) (null test-not))
@@ -113,7 +127,8 @@ stopped."
       ((and from-end test-not)
        (split-from-end (lambda (sequence end)
                          (position delimiter sequence :end end :from-end t :key key :test-not test-not))
-                       sequence start end count remove-empty-subseqs))))
+                       sequence start end count remove-empty-subseqs))
+      (t (error "it should be impossible to reach this"))))
 
   (defun split-sequence-if (predicate sequence &key (start 0) (end nil) (from-end nil)
                             (count nil) (remove-empty-subseqs nil) (key #'identity))
@@ -128,6 +143,10 @@ this function; :from-end values of NIL and T are equivalent unless
 :count is supplied. The second return value is an index suitable as an
 argument to CL:SUBSEQ into the sequence indicating where processing
 stopped."
+    (declare (optimize speed)
+             (type array-index start)
+             (type (or null array-index) end count)
+             (type sequence sequence))
     (check-bounds sequence start end)
     (if from-end
         (split-from-end (lambda (sequence end)
@@ -150,6 +169,10 @@ of this function; :from-end values of NIL and T are equivalent unless
 :count is supplied. The second return value is an index suitable as an
 argument to CL:SUBSEQ into the sequence indicating where processing
 stopped."
+    (declare (optimize speed)
+             (type array-index start)
+             (type (or null array-index) end count)
+             (type sequence sequence))
     (check-bounds sequence start end)
     (if from-end
         (split-from-end (lambda (sequence end)
