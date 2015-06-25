@@ -6,10 +6,7 @@
   :description "Splits a sequence into a list of subsequences
   delimited by objects satisfying a test."
   :license "public domain"
-  :version #.(with-open-file (f (merge-pathnames "version.lisp-expr"
-                                                 (or *compile-file-pathname*
-                                                     *load-truename*)))
-               (read f))
+  :version (:read-file-form "version.lisp-expr")
   :components ((:file "split-sequence"))
   :in-order-to ((asdf:test-op (asdf:load-op :split-sequence-tests)))
   :perform (asdf:test-op :after (op c)
