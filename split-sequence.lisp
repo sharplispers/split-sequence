@@ -37,6 +37,17 @@
 
 (in-package :split-sequence)
 
+(deftype array-index (&optional (length array-dimension-limit))
+  `(integer 0 (,length)))
+
+(declaim (ftype (function (&rest t) (values list integer))
+                split-sequence split-sequence-if split-sequence-if-not))
+
+(declaim (ftype (function (function sequence array-index
+                                    (or null array-index) (or null array-index) boolean)
+                          (values list integer))
+                split-from-start split-from-end))
+
 (macrolet ((check-bounds (sequence start end)
              (let ((length (gensym (string '#:length))))
                `(let ((,length (length ,sequence)))
@@ -124,6 +135,7 @@ stopped."
                           sequence start end count remove-empty-subseqs))))
 
 (defun split-from-end (position-fn sequence start end count remove-empty-subseqs)
+  (declare (optimize (speed 3) (debug 0)))
   (loop
      :for right := end :then left
      :for left := (max (or (funcall position-fn sequence right) -1)
@@ -140,6 +152,7 @@ stopped."
    :finally (return (values (nreverse subseqs) (1+ left)))))
 
 (defun split-from-start (position-fn sequence start end count remove-empty-subseqs)
+  (declare (optimize (speed 3) (debug 0)))
   (let ((length (length sequence)))
     (loop
        :for left := start :then (+ right 1)
