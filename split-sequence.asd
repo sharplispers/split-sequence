@@ -7,7 +7,8 @@
   delimited by objects satisfying a test."
   :license "public domain"
   :version (:read-file-form "version.sexp")
-  :components ((:file "split-sequence"))
+  :components ((:static-file "version.sexp")
+               (:file "split-sequence"))
   :in-order-to ((asdf:test-op (asdf:load-op :split-sequence-tests)))
   :perform (asdf:test-op :after (op c)
              (funcall (intern (symbol-name '#:run!) '#:5am) :split-sequence)))
