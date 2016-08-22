@@ -85,7 +85,7 @@ stopped."
        (split-from-end (lambda (sequence end)
                          (position delimiter sequence :end end :from-end t :key key :test test))
                        sequence start end count remove-empty-subseqs))
-      ((and from-end test-not)
+      (t
        (split-from-end (lambda (sequence end)
                          (position delimiter sequence :end end :from-end t :key key :test-not test-not))
                        sequence start end count remove-empty-subseqs))))
