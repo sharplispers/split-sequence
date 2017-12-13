@@ -19,5 +19,5 @@
   :components ((:file "tests")))
 
 (defmethod perform ((o test-op) (c (eql (find-system :split-sequence))))
-  (load-system :split-sequence/tests :force '(:split-sequence/tests))
+  (load-system :split-sequence/tests)
   (symbol-call :5am :run! :split-sequence))
