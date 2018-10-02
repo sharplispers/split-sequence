@@ -5,7 +5,7 @@
   :maintainer "Sharp Lispers <sharplispers@googlegroups.com>"
   :description "Splits a sequence into a list of subsequences
   delimited by objects satisfying a test."
-  :license "public domain"
+  :license "MIT"
   :version (:read-file-form "version.sexp")
   :components ((:static-file "version.sexp")
                (:file "split-sequence")))
@@ -14,7 +14,7 @@
   :author "Arthur Lemmens <alemmens@xs4all.nl>"
   :maintainer "Sharp Lispers <sharplispers@googlegroups.com>"
   :description "Split-Sequence test suite"
-  :license "public domain"
+  :license "MIT"
   :depends-on (:split-sequence :fiveam)
   :components ((:file "tests")))
 
