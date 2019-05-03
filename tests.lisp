@@ -190,10 +190,10 @@
   (signals type-error (split-sequence 2 '(1 2 3) :test nil))
   (signals type-error (split-sequence 2 '(1 2 3) :test-not nil))
   ;; Both provided
-  (is (equal '((1) (3)) (split-sequence 2 '(1 2 3) :test #'eql :test-not nil)))
-  (is (equal '(() (2) ()) (split-sequence 2 '(1 2 3) :test nil :test-not #'eql)))
-  (signals error (split-sequence 2 '(1 2 3) :test #'eql :test-not #'eql))
-  (signals error (split-sequence 2 '(1 2 3) :test nil :test-not nil)))
+  (signals program-error (split-sequence 2 '(1 2 3) :test #'eql :test-not nil))
+  (signals program-error (split-sequence 2 '(1 2 3) :test nil :test-not #'eql))
+  (signals program-error (split-sequence 2 '(1 2 3) :test #'eql :test-not #'eql))
+  (signals program-error (split-sequence 2 '(1 2 3) :test nil :test-not nil)))
 
 ;;; FUZZ TEST
 
