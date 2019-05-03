@@ -2,8 +2,6 @@
 
 (in-package :split-sequence)
 
-(declaim (inline list-long-enough-p check-bounds check-tests))
-
 (defun list-long-enough-p (list length)
   (or (zerop length)
       (not (null (nthcdr (1- length) list)))))
@@ -24,13 +22,17 @@
          (unless (<= start end length)
            (error "Wrong sequence bounds. START: ~S END: ~S" start end)))))))
 
-(defun check-tests (test test-p test-not test-not-p)
-  (when (and test test-p test-not test-not-p)
-    (error "Cannot specify both TEST and TEST-NOT."))
-  (when (and test-not-p (null test-not) (not test-p))
-    (error 'type-error :datum test :expected-type '(or function (and symbol (not null)))))
-  (when (and test-p (null test) (not test-not-p))
-    (error 'type-error :datum test :expected-type '(or function (and symbol (not null))))))
+(define-condition simple-program-error (program-error simple-condition) ())
+
+(defmacro check-tests (test test-p test-not test-not-p)
+  `(progn
+     (when (and ,test-p ,test-not-p)
+       (error (make-condition 'simple-program-error
+                              :format-control "Cannot specify both TEST and TEST-NOT.")))
+     (when (and ,test-not-p (not ,test-p))
+       (check-type ,test-not (or function (and symbol (not null)))))
+     (when (and ,test-p (not ,test-not-p))
+       (check-type ,test (or function (and symbol (not null)))))))
 
 (declaim (ftype (function (&rest t) (values list unsigned-byte))
                 split-sequence split-sequence-if split-sequence-if-not))
