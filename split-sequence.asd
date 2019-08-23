@@ -1,4 +1,4 @@
-;;; -*- Lisp -*-
+;;;; -*- Mode: LISP; Base: 10; Syntax: ANSI-Common-lisp; -*-
 
 (defsystem :split-sequence
   :author "Arthur Lemmens <alemmens@xs4all.nl>"
