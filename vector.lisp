@@ -17,46 +17,6 @@
                           (values list unsigned-byte))
                 split-vector-from-start split-vector-from-end))
 
-(defun split-vector
-    (delimiter vector start end from-end count remove-empty-subseqs test test-not key)
-  (cond
-    ((and (not from-end) (null test-not))
-     (split-vector-from-start (lambda (vector start)
-                                (position delimiter vector :start start :key key :test test))
-                              vector start end count remove-empty-subseqs))
-    ((and (not from-end) test-not)
-     (split-vector-from-start (lambda (vector start)
-                                (position delimiter vector :start start :key key :test-not test-not))
-                              vector start end count remove-empty-subseqs))
-    ((and from-end (null test-not))
-     (split-vector-from-end (lambda (vector end)
-                              (position delimiter vector :end end :from-end t :key key :test test))
-                            vector start end count remove-empty-subseqs))
-    (t
-     (split-vector-from-end (lambda (vector end)
-                              (position delimiter vector :end end :from-end t :key key :test-not test-not))
-                            vector start end count remove-empty-subseqs))))
-
-(defun split-vector-if
-    (predicate vector start end from-end count remove-empty-subseqs key)
-  (if from-end
-      (split-vector-from-end (lambda (vector end)
-                               (position-if predicate vector :end end :from-end t :key key))
-                             vector start end count remove-empty-subseqs)
-      (split-vector-from-start (lambda (vector start)
-                                 (position-if predicate vector :start start :key key))
-                               vector start end count remove-empty-subseqs)))
-
-(defun split-vector-if-not
-    (predicate vector start end from-end count remove-empty-subseqs key)
-  (if from-end
-      (split-vector-from-end (lambda (vector end)
-                               (position-if-not predicate vector :end end :from-end t :key key))
-                             vector start end count remove-empty-subseqs)
-      (split-vector-from-start (lambda (vector start)
-                                 (position-if-not predicate vector :start start :key key))
-                               vector start end count remove-empty-subseqs)))
-
 (defun split-vector-from-end (position-fn vector start end count remove-empty-subseqs)
   (declare (optimize (speed 3) (debug 0))
            (type (function (vector fixnum) (or null fixnum)) position-fn))
@@ -92,3 +52,43 @@
           :and :sum 1 :into nr-elts :of-type fixnum
       :until (>= right end)
       :finally (return (values subseqs right)))))
+
+(defun split-vector-if
+    (predicate vector start end from-end count remove-empty-subseqs key)
+  (if from-end
+      (split-vector-from-end (lambda (vector end)
+                               (position-if predicate vector :end end :from-end t :key key))
+                             vector start end count remove-empty-subseqs)
+      (split-vector-from-start (lambda (vector start)
+                                 (position-if predicate vector :start start :key key))
+                               vector start end count remove-empty-subseqs)))
+
+(defun split-vector-if-not
+    (predicate vector start end from-end count remove-empty-subseqs key)
+  (if from-end
+      (split-vector-from-end (lambda (vector end)
+                               (position-if-not predicate vector :end end :from-end t :key key))
+                             vector start end count remove-empty-subseqs)
+      (split-vector-from-start (lambda (vector start)
+                                 (position-if-not predicate vector :start start :key key))
+                               vector start end count remove-empty-subseqs)))
+
+(defun split-vector
+    (delimiter vector start end from-end count remove-empty-subseqs test test-not key)
+  (cond
+    ((and (not from-end) (null test-not))
+     (split-vector-from-start (lambda (vector start)
+                                (position delimiter vector :start start :key key :test test))
+                              vector start end count remove-empty-subseqs))
+    ((and (not from-end) test-not)
+     (split-vector-from-start (lambda (vector start)
+                                (position delimiter vector :start start :key key :test-not test-not))
+                              vector start end count remove-empty-subseqs))
+    ((and from-end (null test-not))
+     (split-vector-from-end (lambda (vector end)
+                              (position delimiter vector :end end :from-end t :key key :test test))
+                            vector start end count remove-empty-subseqs))
+    (t
+     (split-vector-from-end (lambda (vector end)
+                              (position delimiter vector :end end :from-end t :key key :test-not test-not))
+                            vector start end count remove-empty-subseqs))))

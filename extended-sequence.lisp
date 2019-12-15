@@ -23,46 +23,6 @@
                           (values list fixnum))
                 split-extended-sequence-from-start split-extended-sequence-from-end))
 
-(defun split-extended-sequence
-    (delimiter sequence start end from-end count remove-empty-subseqs test test-not key)
-  (cond
-    ((and (not from-end) (null test-not))
-     (split-extended-sequence-from-start (lambda (sequence start)
-                                           (position delimiter sequence :start start :key key :test test))
-                                         sequence start end count remove-empty-subseqs))
-    ((and (not from-end) test-not)
-     (split-extended-sequence-from-start (lambda (sequence start)
-                                           (position delimiter sequence :start start :key key :test-not test-not))
-                                         sequence start end count remove-empty-subseqs))
-    ((and from-end (null test-not))
-     (split-extended-sequence-from-end (lambda (sequence end)
-                                         (position delimiter sequence :end end :from-end t :key key :test test))
-                                       sequence start end count remove-empty-subseqs))
-    (t
-     (split-extended-sequence-from-end (lambda (sequence end)
-                                         (position delimiter sequence :end end :from-end t :key key :test-not test-not))
-                                       sequence start end count remove-empty-subseqs))))
-
-(defun split-extended-sequence-if
-    (predicate sequence start end from-end count remove-empty-subseqs key)
-  (if from-end
-      (split-extended-sequence-from-end (lambda (sequence end)
-                                          (position-if predicate sequence :end end :from-end t :key key))
-                                        sequence start end count remove-empty-subseqs)
-      (split-extended-sequence-from-start (lambda (sequence start)
-                                            (position-if predicate sequence :start start :key key))
-                                          sequence start end count remove-empty-subseqs)))
-
-(defun split-extended-sequence-if-not
-    (predicate sequence start end from-end count remove-empty-subseqs key)
-  (if from-end
-      (split-extended-sequence-from-end (lambda (sequence end)
-                                          (position-if-not predicate sequence :end end :from-end t :key key))
-                                        sequence start end count remove-empty-subseqs)
-      (split-extended-sequence-from-start (lambda (sequence start)
-                                            (position-if-not predicate sequence :start start :key key))
-                                          sequence start end count remove-empty-subseqs)))
-
 (defun split-extended-sequence-from-end (position-fn sequence start end count remove-empty-subseqs)
   (declare (optimize (speed 3) (debug 0))
            (type (function (extended-sequence fixnum) (or null fixnum)) position-fn))
@@ -98,3 +58,43 @@
         :and :sum 1 :into nr-elts :of-type fixnum
     :until (>= right end)
     :finally (return (values subseqs right))))
+
+(defun split-extended-sequence-if
+    (predicate sequence start end from-end count remove-empty-subseqs key)
+  (if from-end
+      (split-extended-sequence-from-end (lambda (sequence end)
+                                          (position-if predicate sequence :end end :from-end t :key key))
+                                        sequence start end count remove-empty-subseqs)
+      (split-extended-sequence-from-start (lambda (sequence start)
+                                            (position-if predicate sequence :start start :key key))
+                                          sequence start end count remove-empty-subseqs)))
+
+(defun split-extended-sequence-if-not
+    (predicate sequence start end from-end count remove-empty-subseqs key)
+  (if from-end
+      (split-extended-sequence-from-end (lambda (sequence end)
+                                          (position-if-not predicate sequence :end end :from-end t :key key))
+                                        sequence start end count remove-empty-subseqs)
+      (split-extended-sequence-from-start (lambda (sequence start)
+                                            (position-if-not predicate sequence :start start :key key))
+                                          sequence start end count remove-empty-subseqs)))
+
+(defun split-extended-sequence
+    (delimiter sequence start end from-end count remove-empty-subseqs test test-not key)
+  (cond
+    ((and (not from-end) (null test-not))
+     (split-extended-sequence-from-start (lambda (sequence start)
+                                           (position delimiter sequence :start start :key key :test test))
+                                         sequence start end count remove-empty-subseqs))
+    ((and (not from-end) test-not)
+     (split-extended-sequence-from-start (lambda (sequence start)
+                                           (position delimiter sequence :start start :key key :test-not test-not))
+                                         sequence start end count remove-empty-subseqs))
+    ((and from-end (null test-not))
+     (split-extended-sequence-from-end (lambda (sequence end)
+                                         (position delimiter sequence :end end :from-end t :key key :test test))
+                                       sequence start end count remove-empty-subseqs))
+    (t
+     (split-extended-sequence-from-end (lambda (sequence end)
+                                         (position delimiter sequence :end end :from-end t :key key :test-not test-not))
+                                       sequence start end count remove-empty-subseqs))))
