@@ -1,0 +1,34 @@
+dist: bionic
+language: lisp
+
+env:
+  matrix:
+    - LISP=abcl
+    - LISP=allegro
+    - LISP=ccl
+    - LISP=ccl32
+    - LISP=ecl
+    - LISP=sbcl
+    - LISP=sbcl32
+    - LISP=cmucl
+
+matrix:
+  allow_failures:
+    - env: LISP=ccl32
+    - env: LISP=cmucl
+
+install:
+  - curl -L https://raw.githubusercontent.com/sionescu/cl-travis/master/install.sh | sh
+  - cl -e "(cl:in-package :cl-user)
+           (dolist (p '(:fiveam))
+             (ql:quickload p :verbose t))"
+
+script:
+  - cl -e "(cl:in-package :cl-user)
+           (print (lisp-implementation-version))(terpri)
+           (ql:quickload :split-sequence/test :verbose t)
+           (uiop:quit (if (some (lambda (x) (typep x '5am::test-failure))
+                                (5am:run :split-sequence))
+                          1 0))"
+
+sudo: required
