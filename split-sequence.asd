@@ -13,7 +13,8 @@
                (:file "list")
                (:file "extended-sequence" :if-feature (:or :sbcl :abcl))
                (:file "api")
-               (:file "documentation")))
+               (:file "documentation"))
+  :in-order-to ((test-op (test-op :split-sequence/tests))))
 
 (defsystem :split-sequence/tests
   :author "Arthur Lemmens <alemmens@xs4all.nl>"
@@ -21,8 +22,5 @@
   :description "Split-Sequence test suite"
   :license "MIT"
   :depends-on (:split-sequence :fiveam)
-  :components ((:file "tests")))
-
-(defmethod perform ((o test-op) (c (eql (find-system :split-sequence))))
-  (load-system :split-sequence/tests)
-  (symbol-call :5am :run! :split-sequence))
+  :components ((:file "tests"))
+  :perform (test-op (o c) (symbol-call :5am :run! :split-sequence)))
