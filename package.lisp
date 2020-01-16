@@ -32,6 +32,13 @@
 
 (defpackage #:split-sequence
   (:use #:common-lisp)
+  #+:split-sequence-cover
+  (:shadow :inline)
   (:export #:split-sequence
            #:split-sequence-if
            #:split-sequence-if-not))
+
+;;; This reader conditional shadows the symbol inline and
+;;; turns off inlining so test coverage can be better measured.
+#+:split-sequence-cover
+(declaim (declaration split-sequence::inline))
