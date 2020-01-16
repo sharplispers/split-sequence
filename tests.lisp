@@ -195,6 +195,17 @@
   (signals program-error (split-sequence 2 '(1 2 3) :test #'eql :test-not #'eql))
   (signals program-error (split-sequence 2 '(1 2 3) :test nil :test-not nil)))
 
+(test split-sequence.cover
+  ;; Tests for covering branches missed by the other tests
+  (is (equal (multiple-value-list
+              (split-sequence nil '(nil nil 1 nil 2 3)
+                              :count 1 :remove-empty-subseqs t))
+             '(((1)) 4)))
+  (is (equal (multiple-value-list
+              (split-sequence nil '(nil nil 1 nil 2 3)
+                              :count 0 :remove-empty-subseqs t))
+             '(nil 2))))  
+
 ;;; FUZZ TEST
 
 (test split-sequence.fuzz
