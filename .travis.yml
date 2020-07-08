@@ -25,6 +25,4 @@ install:
 script:
   - cl -e "(print (lisp-implementation-version))(terpri)
            (ql:quickload :split-sequence/tests :verbose t)
-           (uiop:quit (if (some (lambda (x) (typep x '5am::test-failure))
-                                (5am:run :split-sequence))
-                          1 0))"
+           (uiop:quit (if (5am:run! :split-sequence) 0 -1))"
