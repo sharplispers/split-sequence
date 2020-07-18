@@ -20,7 +20,7 @@ jobs:
     - env: LISP=sbcl32
 
 install:
-  - curl -L https://raw.githubusercontent.com/sionescu/cl-travis/master/install.sh | sh
+  - curl -L https://raw.githubusercontent.com/lispci/cl-travis/master/install.sh | sh
 
 script:
   - cl -e "(print (lisp-implementation-version))(terpri)
