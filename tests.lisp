@@ -204,7 +204,7 @@
   (is (equal (multiple-value-list
               (split-sequence nil '(nil nil 1 nil 2 3)
                               :count 0 :remove-empty-subseqs t))
-             '(nil 2))))  
+             '(nil 2))))
 
 ;;; FUZZ TEST
 
