@@ -1,5 +1,8 @@
 ;;; -*- Lisp -*-
 
+#.(unless (or #+asdf3.1 (version<= "3.1" (asdf-version)))
+    (error "You need ASDF >= 3.1 to load this system correctly."))
+
 (defsystem :split-sequence
   :author "Arthur Lemmens <alemmens@xs4all.nl>"
   :maintainer "Sharp Lispers <sharplispers@googlegroups.com>"
