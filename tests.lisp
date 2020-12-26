@@ -231,6 +231,13 @@
                                  :from-end t))
             (values output index))))
 
+(define-test split-sequence-if.5 (:input (input "abracadabra")
+                                  :output (output ("r"))
+                                  :index (index 4))
+  (is (epmv (split-sequence-if (lambda (x) (member x '(#\a #\b))) input :remove-empty-subseqs t
+                               :end 11 :count 1)
+            (values output index))))
+
 (define-test split-sequence-if-not.1 (:input (input "abracadabra")
                                       :output (output ("ab" "a" "a" "ab" "a"))
                                       :index (index 11))
@@ -282,7 +289,6 @@
 
 ;;; FUZZ TEST
 
-#+(or)
 (test split-sequence.fuzz
   (fuzz :verbose nil :fiveamp t))
 
