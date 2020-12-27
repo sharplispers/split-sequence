@@ -8,7 +8,7 @@
 #+sbcl
 (progn
   (eval-when (:compile-toplevel :load-toplevel :execute)
-    (defclass eseq (sequence)
+    (defclass eseq (standard-object sequence)
       ((actual-seq :type list :initarg :actual-seq :initform nil
                    :accessor actual-seq))
       (:documentation "Extended sequence type in SBCL")))
