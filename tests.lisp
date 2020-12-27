@@ -222,11 +222,11 @@
   (is (epmv (split-sequence-if (lambda (x) (evenp (parse-integer (string x)))) input)
             (values output index))))
 
-(define-test split-sequence-if.4 (:input (input "12121212121")
-                                  :output (output ("12121" "1" "1" "1"))
+(define-test split-sequence-if.4 (:input (input "1212121")
+                                  :output (output ("1" "1" "1" "1"))
                                   :index (index 0))
   (is (epmv (let ((count 3))
-              (split-sequence-if (lambda (c) (and (eql c #\2) (>= (decf count) 0)))
+              (split-sequence-if (lambda (c) (eql c #\2))
                                  input
                                  :from-end t))
             (values output index))))
@@ -244,13 +244,12 @@
   (is (epmv (split-sequence-if-not (lambda (x) (member x '(#\a #\b))) input)
             (values output index))))
 
-(define-test split-sequence-if-not.2 (:input (input "12121212121")
-                                      :output (output ("12121" "1" "1" "1"))
+(define-test split-sequence-if-not.2 (:input (input "1212121")
+                                      :output (output ("1" "1" "1" "1"))
                                       :index (index 0))
-  (is (epmv (let ((count 3))
-              (split-sequence-if-not (lambda (c) (not (and (eql c #\2) (>= (decf count) 0))))
-                                     input
-                                     :from-end t))
+  (is (epmv (split-sequence-if-not (lambda (c) (not (eql c #\2)))
+                                   input
+                                   :from-end t)
             (values output index))))
 
 (test split-sequence.start-end-error
