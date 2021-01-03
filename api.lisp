@@ -13,6 +13,8 @@
     (typecase sequence
       (list
        (when end
+         (unless (<= start end)
+           (error "Wrong sequence bounds. START: ~S END: ~S" start end))
          (unless (list-long-enough-p sequence end)
            (error "The list is too short: END was ~S but the list is ~S elements long."
                   end (length sequence)))))
@@ -25,14 +27,13 @@
 (define-condition simple-program-error (program-error simple-condition) ())
 
 (defmacro check-tests (test test-p test-not test-not-p)
-  `(progn
-     (when (and ,test-p ,test-not-p)
-       (error (make-condition 'simple-program-error
-                              :format-control "Cannot specify both TEST and TEST-NOT.")))
-     (when (and ,test-not-p (not ,test-p))
-       (check-type ,test-not (or function (and symbol (not null)))))
-     (when (and ,test-p (not ,test-not-p))
-       (check-type ,test (or function (and symbol (not null)))))))
+  `(if ,test-p
+       (if ,test-not-p
+           (error (make-condition 'simple-program-error
+                                  :format-control "Cannot specify both TEST and TEST-NOT."))
+           (check-type ,test (or function (and symbol (not null)))))
+       (when ,test-not-p
+         (check-type ,test-not (or function (and symbol (not null)))))))
 
 (declaim (ftype (function (&rest t) (values list unsigned-byte))
                 split-sequence split-sequence-if split-sequence-if-not))
