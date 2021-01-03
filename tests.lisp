@@ -205,6 +205,18 @@
   (is (epmv (split-sequence 0 input :count 3)
             (values output index))))
 
+(define-test split-sequence.19 (:input (input #(1 0 3 0 4 0 5))
+                                :output (output (#() #(0) #(0) #(0) #()))
+                                :index (index 7))
+  (is (epmv (split-sequence 0 input :test (lambda (x y) (not (eql x y))))
+            (values output index))))
+
+(define-test split-sequence.20 (:input (input #(1 0 3 0 4 0 5))
+                                :output (output (#() #(0) #(0) #(0) #()))
+                                :index (index 7))
+  (is (epmv (split-sequence 0 input :test-not #'eql)
+            (values output index))))
+
 (define-test split-sequence-if.1 (:input (input "abracadabra")
                                   :output (output ("" "" "r" "c" "d" "" "r" ""))
                                   :index (index 11))
@@ -239,6 +251,30 @@
                                :end 11 :count 1)
             (values output index))))
 
+(define-test split-sequence-if.6 (:input (input #(0 1 2 3 4 5 6))
+                                  :output (output (#(0) #(2) #(4) #(6)))
+                                  :index (index 7))
+  (is (epmv (split-sequence-if #'evenp input :key #'1+)
+            (values output index))))
+
+(define-test split-sequence-if.7 (:input (input #(0 1 2 3 4 5 6))
+                                  :output (output (#(0) #(2) #()))
+                                  :index (index 4))
+  (is (epmv (split-sequence-if #'oddp input :end 4)
+            (values output index))))
+
+(define-test split-sequence-if.8 (:input (input #(0 1 2 3 4 5 6))
+                                  :output (output (#(2) #(4) #(6)))
+                                  :index (index 7))
+  (is (epmv (split-sequence-if #'oddp input :start 2)
+            (values output index))))
+
+(define-test split-sequence-if.9 (:input (input #(0 1 2 3 4 5 6))
+                                  :output (output (#()))
+                                  :index (index 0))
+  (is (epmv (split-sequence-if #'oddp input :start 0 :end 0)
+            (values output index))))
+
 (define-test split-sequence-if-not.1 (:input (input "abracadabra")
                                       :output (output ("ab" "a" "a" "ab" "a"))
                                       :index (index 11))
@@ -253,11 +289,57 @@
                                    :from-end t)
             (values output index))))
 
+(define-test split-sequence-if-not.3 (:input (input #(0 1 2 3 4 5 6))
+                                      :output (output (#(0) #(2) #(4) #(6)))
+                                      :index (index 7))
+  (is (epmv (split-sequence-if-not #'oddp input :key '1+)
+            (values output index))))
+
+(define-test split-sequence-if-not.4 (:input (input #(0 1 2 3 4 5 6))
+                                      :output (output (#(1) #(3) #(5)))
+                                      :index (index 7))
+  (is (epmv (split-sequence-if-not #'oddp input :remove-empty-subseqs t)
+            (values output index))))
+
+(define-test split-sequence-if-not.5 (:input (input #(0 1 0 3 0 5))
+                                      :output (output (#() #(1)))
+                                      :index (index 3))
+  (is (epmv (split-sequence-if-not #'oddp input :count 2)
+            (values output index))))
+
+(define-test split-sequence-if-not.6 (:input (input #(0 1 0 3 0 5))
+                                      :output (output (#() #(1) #()))
+                                      :index (index 3))
+  (is (epmv (split-sequence-if-not #'oddp input :end 3)
+            (values output index))))
+
+(define-test split-sequence-if-not.7 (:input (input #(0 1 0 3 0 5))
+                                      :output (output (#(1) #()))
+                                      :index (index 3))
+  (is (epmv (split-sequence-if-not #'oddp input :start 1 :end 3)
+            (values output index))))
+
+(define-test split-sequence-if-not.8 (:input (input #(0 1 0 3 0 5))
+                                      :output (output (#() #()))
+                                      :index (index 3))
+  (is (epmv (split-sequence-if-not #'oddp input :start 2 :end 3)
+            (values output index))))
+
+(define-test split-sequence-if-not.9 (:input (input #(0 1 0 3 0 5))
+                                      :output (output (#()))
+                                      :index (index 0))
+  (is (epmv (split-sequence-if-not #'oddp input :start 0 :end 0)
+            (values output index))))
+
 (test split-sequence.start-end-error
   (signals error (split-sequence 0 #(0 1 2 3) :start nil))
   (signals error (split-sequence 0 #(0 1 2 3) :end '#:end))
   (signals error (split-sequence 0 #(0 1 2 3) :start 0 :end 8))
-  (signals error (split-sequence 0 #(0 1 2 3) :start 2 :end 0)))
+  (signals error (split-sequence 0 #(0 1 2 3) :start 2 :end 0))
+  (signals error (split-sequence-if #'evenp #(1 2 3 4 5) :start 2 :end 0))
+  (signals error (split-sequence-if #'evenp '(1 2 3 4 5) :start 2 :end 0))
+  (signals error (split-sequence-if-not #'evenp #(1 2 3 4 5) :start 2 :end 0))
+  (signals error (split-sequence-if-not #'evenp '(1 2 3 4 5) :start 2 :end 0)))
 
 (test split-sequence.test-provided
   ;; Neither provided
@@ -267,6 +349,8 @@
   (is (equal '(() (2) ()) (split-sequence 2 '(1 2 3) :test-not #'eql)))
   (signals type-error (split-sequence 2 '(1 2 3) :test nil))
   (signals type-error (split-sequence 2 '(1 2 3) :test-not nil))
+  (signals type-error (split-sequence 2 '(1 2 3) :test 1))
+  (signals type-error (split-sequence 2 '(1 2 3) :test-not 1))
   ;; Both provided
   (signals program-error (split-sequence 2 '(1 2 3) :test #'eql :test-not nil))
   (signals program-error (split-sequence 2 '(1 2 3) :test nil :test-not #'eql))
@@ -285,6 +369,7 @@
              '(nil 2))))
 
 (test split-sequence.check-bounds
+  (signals error (split-sequence 2 '(1 2 3 4 5) :start 3 :end 2))
   (signals error (split-sequence 2 '(1 2 3 4) :end 5)))
 
 ;;; FUZZ TEST
